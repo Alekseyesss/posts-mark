@@ -11,25 +11,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //watching
   body.addEventListener('click', (event) => {
-    const mark = event.target;
+    const mark = event.target.parentNode;
     if (mark.classList.contains('favorite-trigger')) {
-
       let post_id = mark.getAttribute('data-ky-post-id');
       post_id = Number(post_id);
 
       mark.classList.toggle('ky-favorite');
 
       let arr = [];
-      if (getCookie('ky_post_ids')) {
-        arr = JSON.parse(getCookie('ky_post_ids'));
+      if (getCookie('wp-ky-data')) {
+        arr = JSON.parse(getCookie('wp-ky-data'));
         let index = arr.indexOf(post_id);
-        (index === -1) ? arr.push(post_id) : arr.splice(index, 1);
+        (index === -1) ? arr.unshift(post_id) : arr.splice(index, 1);
       }
       else {
         arr.push(post_id);
       }
       arr = JSON.stringify(arr);
-      document.cookie = `ky_post_ids=${arr}; path=/`;
+      document.cookie = `wp-ky-data=${arr}; path=/`;
     }
   })
 });

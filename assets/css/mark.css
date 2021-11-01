@@ -1,3 +1,9 @@
-.ky-favorite{
-  color: red;
+.favorite-trigger {
+  fill: #8f9092;
+}
+.ky-favorite {
+  fill: #ff0000;
+}
+.favorite-trigger path {
+  cursor: pointer;
 }

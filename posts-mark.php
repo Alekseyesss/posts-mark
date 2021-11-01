@@ -8,7 +8,8 @@
  * Version:             1.0.1
  * Requires at least:   4.9
  * Requires PHP:        5.5
- * Author:              Kuryliuk
+ * Author:              Kuryliuk Oleksii
+ * Author URI:          http://anna.h67993fh.beget.tech/
  * License:             MIT
  */
 

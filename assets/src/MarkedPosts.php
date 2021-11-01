@@ -10,7 +10,12 @@ class MarkedPosts
 
   public function __construct()
   {
-    $this->posts = json_decode($_COOKIE["ky_post_ids"]);
+    $wp_ky_data = wp_unslash($_COOKIE['wp-ky-data']);
+    $wp_ky_data = json_decode($wp_ky_data, true);
+    $wp_ky_data = is_array($wp_ky_data) ? $wp_ky_data : [];
+    $wp_ky_data = array_map('absint', $wp_ky_data);
+    $wp_ky_data = array_filter($wp_ky_data);
+    $this->posts = $wp_ky_data;
   }
 
   public function hooks()
@@ -20,11 +25,15 @@ class MarkedPosts
 
   public function marked_posts()
   {
+    if (!$this->posts) {
+      return '';
+    }
     $query = new WP_Query([
+      'post_type'    => 'any',
       'post__in'  => $this->posts,
-      'orderby' => 'date',
-      'order' => 'DESC',
-      'posts_per_page' => 99,
+      'orderby' => 'post__in',
+      'posts_per_page' => 100,
+      'post_status' => 'publish',
     ]);
     ob_start();
     if ($query->have_posts()) :
