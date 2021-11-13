@@ -1,0 +1,23 @@
+.ky-favorite-posts-item {
+  display: flex;
+  list-style-type: none;
+  margin-bottom: 4px;
+}
+.ky-favorite-posts-item h3 {
+  color: #000;
+  transition: 0.3s;
+}
+.ky-favorite-posts-item h3:hover {
+  transform: translateY(-3px)
+}
+.ky-favorite-posts-item a {
+  text-decoration: none !important;
+}
+.favorite-trigger-list {
+  fill: #ff0000;
+  margin-right: 14px;
+  transition: 0.4s;
+}
+.favorite-trigger-list:hover {
+  fill: #8f9092;
+}

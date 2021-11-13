@@ -16,21 +16,20 @@ class Mark
   {
     add_action('wp_enqueue_scripts', [$this, 'register_styles']);
     add_action('wp_enqueue_scripts', [$this, 'register_scripts']);
-    add_shortcode('mark_content', [$this, 'mark']);
-    add_shortcode('mark_excerpt', [$this, 'excerpt']);
+    $this->mark();
+    $this->excerpt();
   }
+
   public function mark()
   {
-    wp_enqueue_style('ky_mark');
-    wp_enqueue_script('ky_mark');
     add_filter('the_content', [$this, 'favorite_text']);
   }
+
   public function excerpt()
   {
-    wp_enqueue_style('ky_mark');
-    wp_enqueue_script('ky_mark');
     add_filter('the_excerpt', [$this, 'favorite_text']);
   }
+
   public function register_styles()
   {
     wp_register_style(
@@ -51,9 +50,23 @@ class Mark
       true
     );
   }
+
   public function favorite_text($text)
   {
     global $post;
+
+    if ($post->post_type !== 'post') {
+      return $text;
+    }
+
+    if (!wp_style_is('ky_mark', 'enqueued')) {
+      wp_enqueue_style('ky_mark');
+    }
+
+    if (!wp_script_is('ky_mark', 'enqueued')) {
+      wp_enqueue_script('ky_mark');
+    }
+
     $id = $post->ID;
     $ky_favorite = '';
     if (in_array($id, $this->posts)) {
