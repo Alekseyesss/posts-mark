@@ -4,56 +4,69 @@ namespace mark;
 
 class Options
 {
+
+  public $posts_list;
+  public $checked_post_type = [];
+
   public function hooks()
   {
+    add_action('wp_loaded', [$this, 'set_posts_list'], 10);
     add_action('admin_menu', [$this, 'add_settings']);
-    add_action('admin_init', [$this, 'favorite_settings']);
   }
+
+  public function set_posts_list()
+  {
+    $post_types = get_post_types(
+      [
+        'public'   => true,
+        '_builtin' => false
+      ]
+    );
+
+    $post_types['post'] = 'post';
+    $this->posts_list = $post_types;
+  }
+
   public function add_settings()
   {
-    add_options_page('Settings Favorites', 'Favorites', 'edit_pages', 'ky_favorites', [$this, 'favorites_options_page']);
+    // Generate Favorites admin page
+    add_menu_page('Settings Favorites', 'Favorites', 'edit_pages', 'ky_favorites', [$this, 'favorites_options_page'], 'dashicons-heart', 81);
   }
+
   public function favorites_options_page()
   {
+    // Generation of our admin page
 ?>
     <div class="wrap">
-      <h2><?php echo get_admin_page_title() ?></h2>
+      <h2>
+        <?php echo get_admin_page_title(); ?>
+      </h2>
 
-      <form action="options.php" method="POST">
-        <?php
-        settings_fields('favorite_group');
-        do_settings_sections('favorites_page');
-        submit_button();
-        ?>
+      <form action="" method="POST">
+        <h2>Select the post types you want to add to favorites:</h2>
+        <?php foreach ($this->posts_list as $element) :
+          $this->manage_options($element); ?>
+          <div style="margin-bottom: 14px">
+            <label>
+              <input type="checkbox" name="<?php echo $element; ?>" value="1" <?php checked(get_option($element, false)) ?>>
+              <?php echo $element; ?>
+            </label>
+          </div>
+        <?php endforeach; ?>
+
+        <button type="submit" name="ky-post-btn" value="333">Submit</button>
       </form>
     </div>
-  <?php
-  }
-  public function favorite_settings()
-  {
-    register_setting('favorite_group', 'select_post_type', [$this, 'sanitize_callback']);
-
-    add_settings_section('favorite_id', 'Main settings', '', 'favorites_page');
-
-    add_settings_field('favorite_field1', 'Mark_post_type', [$this, 'fill_favorite_field1'], 'favorites_page', 'favorite_id');
-  }
-  public function fill_favorite_field1()
-  {
-    $val = get_option('option_name');
-    $val = $val ? $val['checkbox'] : null;
-  ?>
-    <label><input type="checkbox" name="option_name[checkbox]" value="1" <?php checked(1, $val) ?> /> Mark</label>
 <?php
   }
-  public function sanitize_callback($options)
-  {
-    foreach ($options as $name => &$val) {
-      if ($name == 'input')
-        $val = strip_tags($val);
 
-      if ($name == 'checkbox')
-        $val = intval($val);
+  public function manage_options($type)
+  {
+    if ($_POST[$type] == 1) {
+      update_option();
+      add_option($type, '1');
+    } elseif ($_POST['ky-post-btn'] == 333) {
+      delete_option($type);
     }
-    return $options;
   }
 }

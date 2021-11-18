@@ -8,8 +8,8 @@ class Mark
 
   public function __construct()
   {
-    $obj = new MarkedPosts();
-    $this->posts = $obj->posts;
+    $objMarkedPosts = new MarkedPosts();
+    $this->posts = $objMarkedPosts->posts;
   }
 
   public function hooks()
@@ -54,8 +54,7 @@ class Mark
   public function favorite_text($text)
   {
     global $post;
-
-    if ($post->post_type !== 'post') {
+    if (!get_option($post->post_type, false)) {
       return $text;
     }
 
