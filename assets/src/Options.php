@@ -6,7 +6,6 @@ class Options
 {
 
   public $posts_list;
-  public $checked_post_type = [];
 
   public function hooks()
   {
@@ -44,12 +43,23 @@ class Options
 
       <form action="" method="POST">
         <h2>Select the post types you want to add to favorites:</h2>
-        <?php foreach ($this->posts_list as $element) :
-          $this->manage_options($element); ?>
-          <div style="margin-bottom: 14px">
+        <?php foreach ($this->posts_list as $post_type) :
+          //check submit used
+          if ($_POST['ky-post-btn'] == 333) {
+            $this->manage_options($post_type);
+          }
+        ?>
+          <div style="margin-bottom: 12px">
             <label>
-              <input type="checkbox" name="<?php echo $element; ?>" value="1" <?php checked(get_option($element, false)) ?>>
-              <?php echo $element; ?>
+              <?php
+              $ky_option = get_option('ky_option', []);
+              if (array_key_exists($post_type, $ky_option)) {
+                $ky_checked = 1;
+              } else {
+                $ky_checked = 0;
+              } ?>
+              <input type="checkbox" name="<?php echo $post_type; ?>" value="1" <?php checked($ky_checked) ?>>
+              <?php echo $post_type; ?>
             </label>
           </div>
         <?php endforeach; ?>
@@ -60,13 +70,39 @@ class Options
 <?php
   }
 
-  public function manage_options($type)
+  // manage_options() - function creates or edits an option with an array of checked post types
+  // $post_type - one post type from the list of post types
+  // $ky_option - option with an array in which we put checked post types
+  // $submit_checked - boolean value marked post or not
+  public function manage_options($post_type)
   {
-    if ($_POST[$type] == 1) {
-      update_option();
-      add_option($type, '1');
-    } elseif ($_POST['ky-post-btn'] == 333) {
-      delete_option($type);
+    $submit_checked = $_POST[$post_type] == 1;
+    $ky_option = get_option('ky_option', false);
+
+    // create an option if it was not created. If the post type has been marked, add to the option.
+    if (!$ky_option && $submit_checked) {
+      update_option('ky_option', [$post_type => 1]);
+      return;
+    } elseif (!$ky_option && !$submit_checked) {
+      return;
     }
+
+    // edit the option depending on whether the post type is checked or not
+    $key_exists = array_key_exists($post_type, $ky_option);
+    if ($submit_checked && $key_exists) {
+      return;
+    } elseif ($submit_checked && !$key_exists) {
+      $ky_option[$post_type] = 1;
+      update_option('ky_option', $ky_option);
+      return;
+    } elseif (!$submit_checked && !$key_exists) {
+      return;
+    } elseif (!$submit_checked && $key_exists) {
+      unset($ky_option[$post_type]);
+      update_option('ky_option', $ky_option);
+      return;
+    }
+
+    var_dump(get_option('ky_option'));
   }
 }
