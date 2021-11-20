@@ -5,28 +5,20 @@ namespace mark;
 class Mark
 {
   public $posts;
+  public $ky_option;
 
   public function __construct()
   {
     $objMarkedPosts = new MarkedPosts();
     $this->posts = $objMarkedPosts->posts;
+    $this->ky_option = get_option('ky_option', []);
   }
 
   public function hooks()
   {
     add_action('wp_enqueue_scripts', [$this, 'register_styles']);
     add_action('wp_enqueue_scripts', [$this, 'register_scripts']);
-    $this->mark();
-    $this->excerpt();
-  }
-
-  public function mark()
-  {
     add_filter('the_content', [$this, 'favorite_text']);
-  }
-
-  public function excerpt()
-  {
     add_filter('the_excerpt', [$this, 'favorite_text']);
   }
 
@@ -54,7 +46,9 @@ class Mark
   public function favorite_text($text)
   {
     global $post;
-    if (!get_option($post->post_type, false)) {
+    // $ky_option - option with an array in which we put checked post types
+
+    if (!array_key_exists($post->post_type, $this->ky_option)) {
       return $text;
     }
 

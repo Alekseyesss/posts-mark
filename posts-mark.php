@@ -32,3 +32,9 @@ $ky_posts = new mark\MarkedPosts();
 $ky_options->hooks();
 $ky_mark->hooks();
 $ky_posts->hooks();
+
+register_deactivation_hook(__FILE__, 'favorite_delete_option');
+function favorite_delete_option()
+{
+  delete_option('ky_option');
+}
