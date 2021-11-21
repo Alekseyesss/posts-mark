@@ -44,12 +44,15 @@ class Options
       <form action="" method="POST">
         <h2>Select the post types you want to add to favorites:</h2>
         <?php
+
+        if (isset($_POST["ky-post-btn"]) && $_POST["ky-post-btn"] == 333) {
+          check_admin_referer("ky_shield", "shield_nonce");
+        }
         $ky_option = get_option("ky_option", []);
 
         foreach ($this->posts_list as $post_type) :
           //check submit used
           if (isset($_POST["ky-post-btn"]) && $_POST["ky-post-btn"] == 333) {
-            check_admin_referer("ky_shield", "shield_nonce");
             $this->manage_options($post_type, $ky_option);
           }
         ?>
