@@ -65,11 +65,12 @@ class MarkedPosts
       'post_status' => 'publish',
     ]);
     ob_start();
-    echo '<ul class="ky-favorite-posts-list">';
+
     if ($query->have_posts()) :
+      echo '<ul class="ky-favorite-posts-list">';
       while ($query->have_posts()) :
-        $query->the_post();
-?>
+        $query->the_post(); ?>
+
         <li class="ky-favorite-posts-item">
           <svg data-ky-post-id='<?php the_ID() ?>' class='favorite-trigger-list' version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
             <title>favorite</title>
@@ -83,8 +84,9 @@ class MarkedPosts
 <?php
       endwhile;
       wp_reset_postdata();
+      echo '</ul><button class="ky-clear-btn">Clear posts</button>';
     endif;
-    echo '</ul>';
+
     return ob_get_clean();
   }
 }

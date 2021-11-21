@@ -1,8 +1,14 @@
-.favorite-trigger {
+.favorite-trigger path {
   fill: #8f9092;
 }
-.ky-favorite {
+.favorite-trigger path:hover {
   fill: #ff0000;
+}
+.ky-favorite path {
+  fill: #ff0000;
+}
+.ky-favorite path:hover {
+  fill: #8f9092;
 }
 .favorite-trigger path {
   cursor: pointer;

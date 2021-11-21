@@ -8,16 +8,39 @@
   transition: 0.3s;
 }
 .ky-favorite-posts-item h3:hover {
-  transform: translateY(-3px)
+  transform: translateY(-3px);
 }
 .ky-favorite-posts-item a {
   text-decoration: none !important;
 }
 .favorite-trigger-list {
-  fill: #ff0000;
   margin-right: 14px;
   transition: 0.4s;
 }
-.favorite-trigger-list:hover {
+.favorite-trigger-list path {
+  fill: #ff0000;
+  cursor: pointer;
+}
+.favorite-trigger-list path:hover {
   fill: #8f9092;
+}
+.ky-post-clear .favorite-trigger-list path {
+  fill: #8f9092;
+}
+.ky-post-clear .favorite-trigger-list path:hover {
+  fill: #ff0000;
+}
+.ky-favorite-posts-list {
+  margin-left: 0;
+}
+.ky-clear-btn {
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.ky-clear-btn:hover {
+  background-color: #c8c9cb;
 }
