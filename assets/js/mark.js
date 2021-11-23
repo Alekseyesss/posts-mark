@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         arr.push(post_id);
       }
       arr = JSON.stringify(arr);
-      document.cookie = `wp-ky-data=${arr}; path=/`;
+      document.cookie = `wp-ky-data=${arr}; path=/; max-age=315360000`;
     }
   })
 });

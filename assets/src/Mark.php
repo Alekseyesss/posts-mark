@@ -6,6 +6,7 @@ class Mark
 {
   public $posts;
   public $ky_option;
+  public $is_script_enqueued = false;
 
   public function __construct()
   {
@@ -26,7 +27,7 @@ class Mark
   {
     wp_register_style(
       'ky_mark',
-      MARK_URL . '/assets/css/mark.css',
+      MARK_URL . 'assets/css/mark.css',
       [],
       MARK_VERSION
     );
@@ -36,7 +37,7 @@ class Mark
   {
     wp_register_script(
       'ky_mark',
-      MARK_URL . '/assets/js/mark.js',
+      MARK_URL . 'assets/js/mark.js',
       [],
       MARK_VERSION,
       true
@@ -52,11 +53,9 @@ class Mark
       return $text;
     }
 
-    if (!wp_style_is('ky_mark', 'enqueued')) {
+    if (!$this->is_script_enqueued) {
+      $this->is_script_enqueued = wp_script_is('ky_mark', 'enqueued');
       wp_enqueue_style('ky_mark');
-    }
-
-    if (!wp_script_is('ky_mark', 'enqueued')) {
       wp_enqueue_script('ky_mark');
     }
 
